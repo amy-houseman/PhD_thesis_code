@@ -1,0 +1,21 @@
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_fastqc
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --account=scw1581
+#SBATCH --qos=maxjobs500
+#SBATCH --partition=htc
+
+module purge
+module load singularity
+module load parallel
+
+cd /scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/TrimmedPEreads
+
+module load FastQC/0.11.8
+
+fastqc *
