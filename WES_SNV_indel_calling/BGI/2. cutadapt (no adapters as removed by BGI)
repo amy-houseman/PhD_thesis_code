@@ -1,0 +1,55 @@
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_cutadapt
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --array=1-23
+#SBATCH --time=12:00:00
+#SBATCH --qos=maxjobs100
+#SBATCH --partition=htc
+
+module purge
+module load singularity
+module load parallel
+
+# Set bash error trapping to exit on first error.
+set -eu
+
+WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
+CONTAINER_FILE=trim_galore-0.6.6.sif
+MY_CONTAINER_PATH=/scratch/$USER/containers
+CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
+
+EXOMEIDS=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/IDswithoutR1R2_JOB27
+INPUTFASTQFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/RawPEreads/{}1.fastq.gz
+INPUTFASTQREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/RawPEreads/{}2.fastq.gz
+FORWARDADAPTER=AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+REVERSEADAPTER=TTACTATGCCGCTGGTGGCTCTAGATGTGAGAAAGGGATGTGCTGCGAGAAGGCTAGA
+
+OUTPUTFASTQFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/TrimmedPEreads/{}1.cutadapt-trimmed.fq.gz
+OUTPUTFASTQREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/TrimmedPEreads/{}2.cutadapt-trimmed.fq.gz
+
+TOOSHORTFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/tooshort/{}1.cutadapt-tooshort.fq.gz
+TOOSHORTREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/tooshort/{}2.cutadapt-tooshort.fq.gz
+
+TXTREPORT=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/TrimmedPEreads/{}cutadapt.txt
+
+if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
+then
+  mkdir -p $MY_CONTAINER_PATH
+  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
+  mkdir $WDPATH
+fi
+
+while [ ! -d $WDPATH ]
+do
+  sleep 10
+done
+
+cd /scratch/c.c21087028/
+
+sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOMEIDS | parallel -j 1 "singularity exec $CONTAINER cutadapt -q 30 -m 35 --too-short-output $TOOSHORTFORWARD --too-short-paired-output $TOOSHORTREVERSE -o $OUTPUTFASTQFORWARD -p $OUTPUTFASTQREVERSE $INPUTFASTQFORWARD $INPUTFASTQREVERSE > $TXTREPORT"
