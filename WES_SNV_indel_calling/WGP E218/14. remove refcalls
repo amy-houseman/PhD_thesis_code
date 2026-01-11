@@ -1,0 +1,20 @@
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_removerefcalls
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p htc
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --array=1
+#SBATCH --qos=maxjobs500
+
+module load parallel
+
+EXOME_IDs_FILE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/RAW_input/bestcoverageID
+INPUT_VCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/deepvariant/vcf/gunzipped/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set.vcf
+OUTPUT_VCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/deepvariant/vcf/gunzipped/norefcalls/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set_norefcalls.vcf
+
+sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "grep -vwE "RefCall" $INPUT_VCF > $OUTPUT_VCF"
