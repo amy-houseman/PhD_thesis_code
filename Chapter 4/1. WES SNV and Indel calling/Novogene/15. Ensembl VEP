@@ -39,5 +39,4 @@ singularity exec /scratch/c.c21087028/ensembl-vep_latest.sif vep --input_file $I
 --force \
 --no_stats \
 --everything \
---plugin CADD,/scratch/c.c21087028/ENSEMBL-VEP-PLUGGINS/ENSEMBL-CADD/whole_genome_GRCh38_SNVs.tsv.gz,/scratch/c.c21087028/ENSEMBL-VEP-PLUGGINS/ENSEMBL-CADD/gnomad.genomes.r3.0.indel.tsv.gz \
---plugin REVEL,/scratch/c.c21087028/ENSEMBL-VEP-PLUGGINS/ENSEMBL-REVEL \
+--plugin CADD,/scratch/c.c21087028/ENSEMBL-VEP-PLUGGINS/ENSEMBL-CADD/whole_genome_GRCh38_SNVs.tsv.gz,/scratch/c.c21087028/ENSEMBL-VEP-PLUGGINS/ENSEMBL-CADD/gnomad.genomes.r3.0.indel.tsv.gz 
