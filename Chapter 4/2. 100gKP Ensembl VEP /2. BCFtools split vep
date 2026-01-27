@@ -1,0 +1,27 @@
+#BSUB -q long  # depending on the number of files that you will need $
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o logs/%J.stdout
+#BSUB -e logs/%J.stderr
+#BSUB -J "bcftools[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
+
+# Create logging directory
+mkdir -p ./logs
+
+# Load modules
+module purge
+module load bio/BCFtools/1.16
+module load tools/parallel/20190222-GCCcore-7.3.0
+
+TOOL=bcftools
+FILEIDS=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1B_output_bcftools_split_vep/1_ensemblvep_IDs
+INPUTVCFVEPPED=/re_scratch/re_gecip/cancer_colorectal/AH/1A_polyposis_cases_ensemblvep/1_vep_original/{}.genome_annotated.txt
+BCFTOOLSOUTPUTVCF=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1B_output_bcftools_split_vep/{}.genome_annotated_bcftoolsplit.txt
+HEADERFILE=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1C_bcftoolssplot_addedheader/bcftoolsheader
+SAMPLENAMEHEADER=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/{}.1C_bcftoolssplot_addedheader
+BCFTOOLSANDHEADER=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1C_bcftoolssplot_addedheader/bcftools_and_header/{}.genome_annotated_bcftoolsplit_headeraddded.txt
+
+sed -n "${LSB_JOBINDEX}p" $FILEIDS | parallel -j 1 "$TOOL +split-vep $INPUTVCFVEPPED -f '\t%CHROM\t%POS\t%ID\t%REF\t%ALT\t%QUAL\t%FILTER\t%CSQ[\t%GT][\t%GQ][\t%GQX][\t%DP][\t%DPF][\t%AD][\t%PL]\n' -d -A tab > $BCFTOOLSOUTPUTVCF | cp $HEADERFILE $SAMPLENAMEHEADER && cat $BCFTOOLSOUTPUTVCF >> $SAMPLENAMEHEADER && mv $SAMPLENAMEHEADER $BCFTOOLSANDHEADER"
