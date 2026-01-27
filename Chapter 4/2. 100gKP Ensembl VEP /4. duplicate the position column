@@ -1,0 +1,22 @@
+#BSUB -q short  # depending on the number of files that you will need
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o %J.stdout
+#BSUB -e %J.stderr
+#BSUB -J "duplicateposcolumn[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
+
+module load tools/parallel/20190222-GCCcore-7.3.0
+
+IDs_file='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/IDs'
+FILE_WITH_FIRST_COL_REMOVED='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/1_remove_first_col/'
+FILE_WITH_FIRST_COL_REMOVED_ENDING='genome_annotated_bcftoolsplit_removefirstcol.txt'
+DUPLICATED_POSITION_COLUMN='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/2_duplicate_pos_column/'
+DUPLICATED_POSITION_COLUMN_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn.txt'
+IDs={}
+
+FILE_ID=$(sed -n "${LSB_JOBINDEX}p" $IDs_file)
+
+awk 'BEGIN { FS="\t";OFS="\t"} {$2=$2"\t" $2}1' ${FILE_WITH_FIRST_COL_REMOVED}${FILE_ID}${FILE_WITH_FIRST_COL_REMOVED_ENDING}  > ${DUPLICATED_POSITION_COLUMN}${FILE_ID}${DUPLICATED_POSITION_COLUMN_ENDING}
