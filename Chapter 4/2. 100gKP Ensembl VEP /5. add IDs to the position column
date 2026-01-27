@@ -1,0 +1,26 @@
+#BSUB -q medium  # depending on the number of files that you will need
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o logs/%J.stdout
+#BSUB -e logs/%J.stderr
+#BSUB -J "IDposcolumn[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
+
+# Create logging directory
+mkdir -p ./logs
+
+# Load modules
+module purge
+module load tools/parallel/20190222-GCCcore-7.3.0
+
+IDs_file='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/IDs'
+DUPLICATED_FILE_PATH='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/2_duplicate_pos_column/'
+DUPLICATED_POSITION_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn.txt'
+ID_ADDED_FILEPATH='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/3_add_IDs_to_pos/'
+ID_ADDED_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn_plateID_added.txt'
+
+FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file")
+
+awk -v OFS="\t" -v FILE_ADD="$FILE_ID" '{$2=FILE_ADD $2}1' "${DUPLICATED_FILE_PATH}${FILE_ID}${DUPLICATED_POSITION_ENDING}" > "${ID_ADDED_FILEPATH}${FILE_ID}${ID_ADDED_ENDING}"
