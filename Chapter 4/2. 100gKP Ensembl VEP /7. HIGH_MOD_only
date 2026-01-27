@@ -1,1 +1,22 @@
+#BSUB -q short  # depending on the number of files that you will need
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o %J.stdout
+#BSUB -e %J.stderr
+#BSUB -J "duplicateposcolumn[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
 
+IDs_file='/file/containing/the/list/of/file/IDs/you/want/toextract/'
+
+CHROM_HIGH_MOD=/file/containing/words/you/want/to/extract/.txt
+FILE_INPUT_PATH=/path/to/the/large/file/that/contains/all/of/the/annotated/patient/variants/
+FILE_INPUT_FILE=/large/file/that/contains/all/of/the/annotated/patient/variants/.txt
+
+PASS_ONLY_OUTPUT_FILEPATH=/path/to/the/output/file/that/contains/only/the/annotated/patient/variants/that/PASS/variantcalling/
+PASS_ONLY_OUTPUT=/file/that/contains/only/the/annotated/patient/variants/that/PASS/variantcalling/.txt
+
+FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file")
+
+LC_ALL-C grep -wf $CHROM_HIGH_MOD "${FILE_INPUT_PATH}${FILE_ID}${FILE_INPUT_FILE}" > "${PASS_ONLY_OUTPUT_FILEPATH}${FILE_ID}${PASS_ONLY_OUTPUT}"
