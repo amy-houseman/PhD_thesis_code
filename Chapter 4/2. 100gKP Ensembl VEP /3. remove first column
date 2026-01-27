@@ -1,0 +1,26 @@
+#BSUB -q long  # depending on the number of files that you will need $
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o logs/%J.stdout
+#BSUB -e logs/%J.stderr
+#BSUB -J "remove_first_column[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
+
+# Create logging directory
+mkdir -p ./logs
+
+# Load modules
+module purge
+module load tools/parallel/20190222-GCCcore-7.3.0
+
+IDs_FILE=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/IDs
+FILE_TO_REMOVE_FIRSTCOL_FROM=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1C_bcftoolssplot_addedheader/bcftools_and_header/{}genome_annotated_bcftoolsplit_headeraddded.txt
+FILE_WITH_FIRST_COL_REMOVED=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/1_remove_first_col/{}genome_annotated_bcftoolsplit_removefirstcol.txt
+DUPLICATED_POSITION_COLUMN=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/2_duplicate_pos_column/{}genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn.txt
+ADD_ID_TO_DUPLICATEDPOS=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/3_add_IDs_to_pos/{}genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn_IDadded.txt
+IDs={}
+
+
+sed -n "${LSB_JOBINDEX}p" $IDs_FILE | parallel -j 1 "cut -f2- $FILE_TO_REMOVE_FIRSTCOL_FROM > $FILE_WITH_FIRST_COL_REMOVED"
