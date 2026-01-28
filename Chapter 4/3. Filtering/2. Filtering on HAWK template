@@ -1,5 +1,9 @@
+#########################
+#In order to filter variants as shown in Chapter 4, Figure 4.1 on the WES ARCCA hawk supercomputer I used a general template and interchanged the basic code for each task. Below is an example. I did cat all the annotated files together prior to this step.
+######################## 
+
 #!/bin/bash --login
-#SBATCH -J AmyHouseman_grepmane
+#SBATCH -J AmyHouseman_grepPASS
 #SBATCH -o %x.stdout.%J.%N
 #SBATCH -e %x.stderr.%J.%N
 #SBATCH --ntasks=1
@@ -14,8 +18,20 @@
 # Set bash error trapping to exit on first error.
 set -eu
 
-INPUTVCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_ALLDATASET_VCFs_BESTCOVERAGE/ALLVARIANTS/newindex_newnotindex/8.sampleID_position_index_cases_new/8C_sampleID_position_maneonly_index_combine/8C_sampleID_position_newindex_maneonly_combine.txt
-CHROMPASS=/scratch/c.c21087028/Polyposis_Exome_Analysis_ALLDATASET_VCFs_BESTCOVERAGE/ALLVARIANTS/newindex_newnotindex/8.sampleID_position_index_cases_new/8C_sampleID_position_maneonly_index_combine/Chrom_PASS
-OUTPUTVCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_ALLDATASET_VCFs_BESTCOVERAGE/ALLVARIANTS/newindex_newnotindex/8.sampleID_position_index_cases_new/8C_sampleID_position_maneonly_index_combine/8D_sampleID_position_newindex_maneonly_passonly_combine.txt 
+INPUTVCF=/large/file/that/contains/all/of/the/annotated/patient/variants/.txt
+CHROMPASS=/file/containing/words/you/want/to/extract/or/input/the/name/of/.txt
+OUTPUTVCF=/file/that/contains/only/the/annotated/patient/variants/that/PASS/variantcalling/.txt
 
 LC_ALL=C fgrep -wf $CHROMPASS $INPUTVCF > $OUTPUTVCF
+
+#########################
+#For each filtering option that included a word, I changed the CHROM_PASS file name and contents to match; for example: to filter for only HIGH and MODERATE impact variants I made a file called CHROM_HIGH_MODERATE, which contained:
+
+CHROM
+HIGH 
+MODERATE
+
+#Which can then be used as the input file for grep -wf. 
+
+#The template for submitting to the supercomputer stayed the same with alternative lines of codes used for the different filtering steps using.
+###########################
