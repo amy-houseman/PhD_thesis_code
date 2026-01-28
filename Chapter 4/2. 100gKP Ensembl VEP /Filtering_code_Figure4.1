@@ -123,9 +123,28 @@ awk 'NR==1 { print } NR != 1 && $45 ~ /damaging/ {print}' SIFT_deleterious_dots.
 awk 'NR==1 { print } NR != 1 && $45=="." {print}' SIFT_deleterious_dots.txt > PolyPhen_dots.txt
 #Then add extract entries from the PolyPhen column that are "unknown"
 awk 'NR==1 { print } NR != 1 && $45 ~ /damaging/ {print}' SIFT_deleterious_dots.txt > PolyPhen_unknown.txt
-
 #Then combined the three files
 cat PolyPhen_damaging.txt PolyPhen_dots.txt PolyPhen_unknown.txt >> PolyPhen_damaging_dots_unknown.txt
+
+#9. #Extract all missense variants from the Consequence column (column 9) in PolyPhen_damaging_dots_unknown.txt
+awk 'NR==1 { print } NR != 1 && $9=="missense_variant" {print} PolyPhen_damaging_dots_unknown.txt > missense_PolyPhen_damaging_dots_unknown.txt
+#Extract all other entries from the Consequence column (column 9) in PolyPhen_damaging_dots_unknown.txt by doing 
+awk '{print $9'} PolyPhen_damaging_dots_unknown.txt > column9_PolyPhen_damaging_dots_unknown.txt
+sort column9_PolyPhen_damaging_dots_unknown.txt > sort_column9_PolyPhen_damaging_dots_unknown.txt
+uniq column9_PolyPhen_damaging_dots_unknown.txt > uniq_column9_PolyPhen_damaging_dots_unknown.txt
+#Then remove entry with missense_variant from uniq_column9_PolyPhen_damaging_dots_unknown.txt and save file.
+#Then keep only the variant entries without the missense_variant consequence
+awk 'FNR==NR{a[$1]++;next}a[$9]' uniq_column9_PolyPhen_damaging_dots_unknown.txt PolyPhen_damaging_dots_unknown.txt > Non_missense_variant_consequence_PolyPhen_damaging_dots_unknown.txt
+
+#Then extract only entries with a CADD score (column 86) equal or more than 24.2.
+awk 'NR ==1 { print } NR != 1 && $89 >= 24.2 {print}' missense_PolyPhen_damaging_dots_unknown.txt > CADD24.2_missense_PolyPhen_damaging_dots_unknown.txt
+Then combined CADD24.2_missense_PolyPhen_damaging_dots_unknown.txt and Non_missense_variant_consequence_PolyPhen_damaging_dots_unknown.txt.
+cat CADD24.2_missense_PolyPhen_damaging_dots_unknown.txt Non_missense_variant_consequence_PolyPhen_damaging_dots_unknown.txt > CADD24.2.txt
+
+#10. #Remove inframe indels and inframe indel splice 
+
+
+
 
 
 
