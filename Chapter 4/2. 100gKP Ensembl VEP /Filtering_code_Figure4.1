@@ -1,0 +1,58 @@
+#In order to filter variants as shown in Chapter 4, Figure 4.1. I used a general template and interchanged the basic code for each task.
+
+#As shown below, for the 100kGP double helix super computer I used:
+
+#BSUB -q short  # depending on the number of files that you will need
+#BSUB -P re_gecip_cancer_colorectal # edit this line
+#BSUB -o %J.stdout
+#BSUB -e %J.stderr
+#BSUB -J "duplicateposcolumn[1-143]%143"
+#BSUB -cwd .
+#BSUB -n 1 # this will need to be the same as the number of VEP forks
+#BSUB -R "rusage[mem=64000] span[hosts=1]"
+#BSUB -M 64000
+
+IDs_file='/file/containing/the/list/of/file/IDs/you/want/toextract/'
+
+CHROM_PASS=/file/containing/words/you/want/to/extract/.txt
+FILE_INPUT_PATH=/path/to/the/large/file/that/contains/all/of/the/annotated/patient/variants/
+FILE_INPUT_FILE=/large/file/that/contains/all/of/the/annotated/patient/variants/.txt
+
+PASS_ONLY_OUTPUT_FILEPATH=/path/to/the/output/file/that/contains/only/the/annotated/patient/variants/that/PASS/variantcalling/
+PASS_ONLY_OUTPUT=/file/that/contains/only/the/annotated/patient/variants/that/PASS/variantcalling/.txt
+
+FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file")
+
+LC_ALL-C grep -wf $CHROM_HIGH_MOD "${FILE_INPUT_PATH}${FILE_ID}${FILE_INPUT_FILE}" > "${PASS_ONLY_OUTPUT_FILEPATH}${FILE_ID}${PASS_ONLY_OUTPUT}"
+
+#For each filtering option that included a word, I changed the CHROM_PASS file name and contents to match; for example: to filter for only HIGH and MODERATE impact variants I made a file which contained:
+
+#CHROM_HIGH_MODERATE
+#CHROM_HIGH_MODERATE would then contain:
+
+CHROM
+HIGH 
+MODERATE
+
+#Which can then be used as the input file for grep -wf. 
+
+#The template for submitting to the supercomputer stayed the same with alternative lines of codes used for the different filtering steps using:
+
+#Column equal or less than 0.01
+awk 'NR ==1 { print } NR != 1 && $45 <= 0.01 {print}' file.txt > 0.01file.txt
+
+#Column only dots
+awk 'NR==1 { print } NR != 1 && $10=="." {print}' file.txt > output.txt
+
+#Column contains the word deleterious
+awk 'NR==1 { print } NR != 1 && $45 ~ /deleterious/ {print}' inputfile.txt > outputfile.txt
+
+#Keep only row with exact phrase in a column
+awk 'NR==1 { print } NR != 1 && $10=="missense_variant" {print} file.txt > output.txt 
+
+#Extract symbols that are dots:
+awk 'NR ==1 { print } NR != 1 && $45 <= 0.01 {print}' file.txt > dots_file.txt
+
+#Grep from file in specific column:
+awk 'FNR==NR{a[$1]++;next}a[$2]' small.txt original.txt > output.txt
+#$2= the column number to grep from in the original file
