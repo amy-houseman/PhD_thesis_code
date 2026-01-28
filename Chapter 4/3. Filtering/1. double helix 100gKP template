@@ -1,5 +1,5 @@
 #########################
-#In order to filter variants as shown in Chapter 4, Figure 4.1 on the 100gKP double helix super computer I used a general template and interchanged the basic code for each task. Below is an example.
+#In order to filter variants as shown in Chapter 4, Figure 4.1 on the 100gKP double helix super computer I used a general template and interchanged the basic code for each task. Below is an example. If you cat all the annotated files together you don't have to use FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file") but this makes the file very big. 
 ######################## 
 
 #BSUB -q short  # depending on the number of files that you will need
