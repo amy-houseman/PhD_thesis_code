@@ -1,0 +1,25 @@
+#Building the environment
+
+module load anaconda
+source activate
+conda create -p ./env
+conda activate ./env
+conda config --env --add channels defaults
+conda config --env --add channels conda-forge
+conda config --env --add channels bioconda
+conda install ngs-bits
+cd env/bin/
+cp settings.ini.example settings.ini
+vi settings.ini
+
+#Change the mysql credentials to:
+
+ngsd_host = "10.212.7.208"
+ngsd_port = 3306
+ngsd_name = "ngsd"
+ngsd_user = "ngsduser_ro"
+ngsd_pass = "nGSdu5er!"
+
+#To run:
+module load anaconda/2022.10
+conda activate ./env
