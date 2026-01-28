@@ -1,0 +1,25 @@
+install.packages("pheatmap")
+library(pheatmap)
+
+#Export dataframe to get the new sample IDs
+library(writexl)
+write_xlsx(APC_UCSC_exons_bases_bedtools_multicov_newindex_combined_forR,"APC_newindex_R_IDs.xlsx")
+
+#Create variable
+df <- APC_UCSC_exons_bases_bedtools_multicov_nownewindex_combined_forR
+colnames(APC_UCSC_exons_bases_bedtools_multicov_nownewindex_combined_forR)
+
+Counts <- df[,-1]
+Counts1  <- t(Counts)
+
+Counts1 <- as.matrix(Counts1)
+
+breaks <- c(1,5,10,20,30,40,50)
+colors <- c("darkred", "rosybrown", "darkseagreen1", "yellowgreen", "seagreen","darkgreen")
+gaps_col <- c(41,194,279,481,590,704,788,893,992,1371,1467,1607,1685,1802,2017)#8594
+
+
+png("test.png", units="in", width=30, height=10, res=600)
+pdf("APC_newindex_exonbases_coverage.pdf", width=30, height=10)
+pheatmap (Counts1, cluster_rows = F, cluster_cols = F, gaps_col=gaps_col, show_rownames = T, show_colnames = F, breaks=breaks, color=colors, fontsize_row = 6, fontsize = 11)
+dev.off()
