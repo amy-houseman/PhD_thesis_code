@@ -1,0 +1,30 @@
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_bedannotateGC
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --qos=maxjobs500
+#SBATCH --partition=htc
+
+module purge
+module load singularity
+module load parallel
+
+# Set bash error trapping to exit on first error.
+set -eu
+
+cd /scratch/c.c21087028/
+
+module load anaconda
+source activate
+conda activate CNVcalling
+
+ORIGINAL_BED=/path/to/exome/panel/bed/file/.bed
+OUTPUT_BED=/path/to/output/bed/BedAnnotateGC.bed
+REFERENCE_HG38=/path/to/indexed/folder/of/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
+
+BedAnnotateGC -in $ORIGINAL_BED -out "gcAnnotated".bed -ref $REFERENCE_HG38
