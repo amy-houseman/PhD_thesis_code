@@ -25,10 +25,7 @@ FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file")
 
 LC_ALL-C grep -wf $CHROM_HIGH_MOD "${FILE_INPUT_PATH}${FILE_ID}${FILE_INPUT_FILE}" > "${PASS_ONLY_OUTPUT_FILEPATH}${FILE_ID}${PASS_ONLY_OUTPUT}"
 
-#For each filtering option that included a word, I changed the CHROM_PASS file name and contents to match; for example: to filter for only HIGH and MODERATE impact variants I made a file which contained:
-
-#CHROM_HIGH_MODERATE
-#CHROM_HIGH_MODERATE would then contain:
+#For each filtering option that included a word, I changed the CHROM_PASS file name and contents to match; for example: to filter for only HIGH and MODERATE impact variants I made a file called CHROM_HIGH_MODERATE, which contained:
 
 CHROM
 HIGH 
