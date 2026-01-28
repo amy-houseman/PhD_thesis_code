@@ -1,0 +1,37 @@
+#Installing ClinCNV packages in R
+git clone https://github.com/imgag/ClinCNV.git
+
+module load 4/4.2.0
+R
+
+#In R directory of ClinCNV:
+
+install.packages("optparse")
+install.packages("robustbase")
+install.packages("MASS")
+install.packages("data.table")
+install.packages("foreach")
+install.packages("doParallel")
+install.packages("mclust")
+install.packages("R.utils")
+install.packages("RColorBrewer")
+install.packages("party")
+install.packages("dbscan")
+install.packages("umap")
+
+install.packages("Rcpp")
+
+library(optparse)
+library(robustbase)
+library(MASS)
+library(data.table)
+library(foreach)
+library(doParallel)
+library(mclust)
+library(R.utils)
+library(RColorBrewer)
+library(party)
+library(dbscan)
+library(umap)
+
+library(Rcpp)
