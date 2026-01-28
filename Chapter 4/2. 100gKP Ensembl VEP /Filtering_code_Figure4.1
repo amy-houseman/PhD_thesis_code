@@ -14,7 +14,7 @@
 
 IDs_file='/file/containing/the/list/of/file/IDs/you/want/toextract/'
 
-CHROM_PASS=/file/containing/words/you/want/to/extract/.txt
+CHROM_PASS=/file/containing/words/you/want/to/extract/or/input/the/name/of/.txt
 FILE_INPUT_PATH=/path/to/the/large/file/that/contains/all/of/the/annotated/patient/variants/
 FILE_INPUT_FILE=/large/file/that/contains/all/of/the/annotated/patient/variants/.txt
 
@@ -57,3 +57,88 @@ awk 'NR==1 { print } NR != 1 && $10=="missense_variant" {print} file.txt > outpu
 #Grep from file in specific column (this does the same as LC_ALL-C grep -wf but it can be quicker as it narrows down the search to a specific columnn of entries).
 awk 'FNR==NR{a[$1]++;next}a[$2]' small.txt original.txt > output.txt
 #$2= the column number to grep from in the original file
+
+
+
+
+The following occur in order, so the output of the previous step should be the input of the following step.
+
+# 1. PASS only
+#$1 is the column number for the FILTER_PASS.txt list, so column number 1.
+#$7 is the column number in the combined annotated variant file where the Filter column is, so column 7.
+
+#Filter_PASS.txt is a text file with a list of:
+
+Filter
+PASS
+
+#This is to ensure only the header and variants assigned as PASS are returned.
+$7
+
+awk 'FNR==NR{a[$1]++;next}a[$7]' Filter_PASS.txt combined_annotated_variants.txt > PASSonly_output.txt
+
+# 2. HIGH and MODERATE impact only
+#$1 is the column number for the IMPACT_HIGH_MODERATE.txt list, so column number 1.
+#$10 is the column number in the combined annotated variant file where the IMPACT column is, so column 10.
+
+#IMPACT_HIGH_MODERATE.txt is a text file with a list of:
+
+IMPACT
+HIGH
+MODERATE
+
+#This is to ensure only the header and variants assigned as HIGH or MODERATE impact are returned.
+awk 'FNR==NR{a[$1]++;next}a[$10]' IMPACT_HIGH_MODERATE.txt PASSonly_output.txt > HIGHMODonly_output.txt
+
+#3. MANE only
+#Extract the column which has the MANE_SELECT (column 33). Using:
+awk '{print $33}' HIGHMODonly_output.txt > MANE_SELECT_column.txt
+#Then sort using 
+sort MANE_SELECT_column.txt > sort_MANE_SELECT_column.txt
+#Then remove duplicates using
+uniq sort_MANE_SELECT_column.txt > uniq_MANE_SELECT_column.txt 
+#Open file and delete the row with a "." and save file.
+#Next use 
+awk 'FNR==NR{a[$1]++;next}a[$33]' uniq_MANE_SELECT_column.txt HIGHMODonly_output.txt > MANEonly_output.txt
+
+#4. Keep MAF equal or less than 0.01 in the 1000 Genomes Project column (column 49).
+awk 'NR ==1 { print } NR != 1 && $49 <= 0.01 {print}' MANEonly_output.txt > 1000genomesproject_MAF_0.01.txt
+
+#5. Keep MAF equal or less than 0.01 in the GnomAD exomes (column 55).
+awk 'NR ==1 { print } NR != 1 && $55 <= 0.01 {print}' 1000genomesproject_MAF_0.01.txt > GnomAD_exomes_MAF_0.01.txt
+
+#6. Keep MAF equal or less than 0.01 in the GnomAD genomes (column 64).
+awk 'NR ==1 { print } NR != 1 && $64 <= 0.01 {print}' GnomAD_exomes_MAF_0.01.txt > GnomAD_genomes_MAF_0.01.txt
+
+#7. #Extract from the SIFT column (column 44) entries that contain the word deleterious.
+awk 'NR==1 { print } NR != 1 && $44 ~ /deleterious/ {print}' GnomAD_genomes_MAF_0.01.txt > SIFT_deleterious.txt
+#Then add extract entries from the SIFT columm that are "."
+awk 'NR==1 { print } NR != 1 && $44=="." {print}' SIFT_deleterious.txt > SIFT_dots.txt
+#Then combined the two files
+cat SIFT_deleterious.txt SIFT_dots.txt >> SIFT_deleterious_dots.txt
+
+#8. #Extract from the PolyPhen column (column 45) entries that contain the word damaging.
+awk 'NR==1 { print } NR != 1 && $45 ~ /damaging/ {print}' SIFT_deleterious_dots.txt > PolyPhen_damaging.txt
+#Then add extract entries from the PolyPhen columm that are "."
+awk 'NR==1 { print } NR != 1 && $45=="." {print}' SIFT_deleterious_dots.txt > PolyPhen_dots.txt
+#Then add extract entries from the PolyPhen column that are "unknown"
+awk 'NR==1 { print } NR != 1 && $45 ~ /damaging/ {print}' SIFT_deleterious_dots.txt > PolyPhen_unknown.txt
+
+#Then combined the three files
+cat PolyPhen_damaging.txt PolyPhen_dots.txt PolyPhen_unknown.txt >> PolyPhen_damaging_dots_unknown.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
