@@ -1,0 +1,22 @@
+#Extract known genes, using their MANE transcript
+#Make a text file with a list of the transcripts: known_gene_trancsipts.txt containing:
+
+NM_000038.6
+NM_001128425.2
+NM_004655.4
+NM_004329.3
+NM_001204.7
+NM_013372.7
+NM_001276270.2
+NM_002439.5
+NM_002528.7
+NM_006231.4
+NM_002691.4
+NM_000314.8
+NM_017763.6
+NM_001023.4
+NM_005359.6
+NM_000455.5
+
+#Next use 
+awk 'FNR==NR{a[$1]++;next}a[$33]' known_gene_trancsipts.txt RDless6.txt > known_gene_transcripts_RDless6.txt
