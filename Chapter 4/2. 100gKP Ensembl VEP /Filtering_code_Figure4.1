@@ -137,7 +137,7 @@ uniq sort_column88_noinframeindels_inframeindelsplice.txt > uniq_column88_noinfr
 #Then extract all non-0,0 entries using
 awk 'FNR==NR{a[$1]++;next}a[$88]' uniq_column88_noinframeindels_inframeindelsplice.txt noinframeindels_inframeindelsplice.txt > no0_0genotype.txt
 
-$12. #Manaually open the text files in excel and calculate the variant allele frequency for each variant in the cohort. Then filter out variants which have a variant allele frequency greater than 0.121. Then save this as a tab delimited file again.
+$12. #Manaually open the text files in excel and calculate the variant cohort allele frequency for each variant in the cohort. Then filter out variants which have a variant cohort allele frequency greater than 0.121. Then save this as a tab delimited file again.
 
 #13. #Manually opened the tab delimited file in excel and remove variants with a read depth less than 6. 
 
