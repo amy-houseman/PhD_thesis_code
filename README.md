@@ -1,5 +1,27 @@
 # PhD_thesis_code
 
+
+|    Step      | Folder || First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+| Step | Description | Folder
+| --- | --- |---|
+| 1. | List all new or modified files | |
+| git diff | Show file differences that haven't been staged | |
+
+
+
+
+
+
+
+
+
 Step 1: SNV and indel calling pipeline
 Step 2: Filtering 
 
