@@ -36,30 +36,9 @@ MODERATE
 
 #Which can then be used as the input file for grep -wf. 
 
-#The template for submitting to the supercomputer stayed the same with alternative lines of codes used for the different filtering steps using:
+#The template for submitting to the supercomputer stayed the same with alternative lines of codes used for the different filtering steps using.
 
-#Column equal or less than 0.01
-awk 'NR ==1 { print } NR != 1 && $45 <= 0.01 {print}' file.txt > 0.01file.txt
-#$45 would be the column containing numbers such as MAF in 1000 genomes project, GnomAD exomes or genomes columns.
-
-#Column only dots
-awk 'NR==1 { print } NR != 1 && $10=="." {print}' file.txt > output.txt
-#$10 would be the column containing numbers such as MAF in 1000 genomes project, GnomAD exomes or genomes columns.
-
-#Column contains the word deleterious
-awk 'NR==1 { print } NR != 1 && $45 ~ /deleterious/ {print}' inputfile.txt > outputfile.txt
-#$45 would be the column containing specific words such as deleterious for SIFT results.
-
-#Keep only row with exact phrase in a column
-#This would be used for only returning missense variants in order to further filter CADD scores.
-awk 'NR==1 { print } NR != 1 && $10=="missense_variant" {print} file.txt > output.txt 
-
-#Grep from file in specific column (this does the same as LC_ALL-C grep -wf but it can be quicker as it narrows down the search to a specific columnn of entries).
-awk 'FNR==NR{a[$1]++;next}a[$2]' small.txt original.txt > output.txt
-#$2= the column number to grep from in the original file
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 The following occur in order, so the output of the previous step should be the input of the following step.
 
@@ -142,6 +121,27 @@ Then combined CADD24.2_missense_PolyPhen_damaging_dots_unknown.txt and Non_misse
 cat CADD24.2_missense_PolyPhen_damaging_dots_unknown.txt Non_missense_variant_consequence_PolyPhen_damaging_dots_unknown.txt > CADD24.2.txt
 
 #10. #Remove inframe indels and inframe indel splice 
+awk '{print $9}' CADD24.2.txt > column9_CADD24.2.txt
+sort column9_CADD24.2.txt > sort_column9_CADD24.2.txt
+uniq sort_column9_CADD24.2.txt > uniq_column9_CADD24.2.txt
+#Then remove entries from uniq_column9_CADD24.2.txt that are inframe indels or inframe indel splice and save the file.
+#Now extract only entries with consequences in uniq_CADD24.2.txt from CADD24.2.txt
+awk 'FNR==NR{a[$1]++;next}a[$9]' column9_CADD24.2.txt CADD24.2.txt > noinframeindels_inframeindelsplice.txt
+
+$11. #Now filtering out genotypes with 0,0 using the same method as above (column 88 is genotype).
+awk '{print $88}' noinframeindels_inframeindelsplice.txt > column88_noinframeindels_inframeindelsplice.txt
+sort column88_noinframeindels_inframeindelsplice.txt > sort_column88_noinframeindels_inframeindelsplice.txt
+uniq sort_column88_noinframeindels_inframeindelsplice.txt > uniq_column88_noinframeindels_inframeindelsplice.txt
+#Then open uniq_column88_noinframeindels_inframeindelsplice.txt and delete the entry for 0,0 and save the file.
+
+#Then extract all non-0,0 entries using
+awk 'FNR==NR{a[$1]++;next}a[$88]' uniq_column88_noinframeindels_inframeindelsplice.txt noinframeindels_inframeindelsplice.txt > no0_0genotype.txt
+
+$12. #Manaually open the text files in excel and calculate the variant allele frequency for each variant in the cohort. Then filter out variants which have a variant allele frequency greater than 0.121. Then save this as a tab delimited file again.
+
+#13. #Manually opened the tab delimited file in excel and remove variants with a read depth less than 6. 
+
+
 
 
 
