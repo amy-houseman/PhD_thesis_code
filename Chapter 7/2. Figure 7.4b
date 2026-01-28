@@ -1,0 +1,19 @@
+library(ggplot2)
+data <- MSI_96drivers_MSI_twohitBCL9L
+
+p <- ggplot(data, aes(x=reorder(Gene,-Percentages_of_the_group_with_LOF_variants),y=Percentages_of_the_group_with_LOF_variants, fill=Group)) + geom_bar(position = "dodge", stat="identity",fill="darkblue")
+p + theme(axis.text.x=element_text(angle = 90, vjust = 1, hjust=1), axis.title=element_text(size=120)) + theme(panel.background = element_blank()) + scale_y_continuous(expand=c(0,0), limits =c(0,100), breaks = scales::pretty_breaks(n=10)) + theme(axis.text = element_text(color="black", size =120))
+
+pdf("MSI_96drivers_MSI_twohitBCL9L-test.pdf", width = 200, height = 80)
+p + theme(axis.text.x=element_text(angle = 90, vjust = 1, hjust=), axis.title=element_text(size=150)) + theme(plot.margin = unit(c(10,10,10,10), "cm")) + theme(panel.background = element_blank()) + scale_y_continuous(expand=c(0,0), limits =c(0,100), breaks = scales::pretty_breaks(n=10)) + theme(axis.text = element_text(color="black", size =150), axis.text.x = element_text(face = "italic"))
+dev.off()
+
+library(ggplot2)
+data <- MSI_96drivers_MSI_noBCL9L
+data$Gene <- factor(data$Gene, levels = c("UBR5","SETD1B","TGFBR2","BCL9","KMT2B","BAX","RNF43","BMPR2","FBXW7","ARID1A","BRAF","AKAP9","PRDM2","APC","SOX9","ATM","BCOR","CLUH","HLA-B","PIK3CA","PTEN","TP53","CTNNB1","LMTK3","PIK3R1","ANKRD11","FAT4","HLA-A","KRAS","MAP2K7","NLRC5","ZNRF3","AR","B2M","CD58","TAP2","ARID2","CASP8","IL7R","MLH1","TBK1","CTNND1","GNAS","ACVR1B","FOXP1","H3Y2","PAN3","PRDM16","TAP1","AKT1","CDKN2A","ERBB3","FBN1","MSH2","PDE4DIP","PPP2R3B","PWWP2A","SMAD4","STAG1","TOP2B","GTF2IRD2","IDH1","IRF1","MYO10","NEDD9","PLXNB2","RGS12","SMARCB1","SRSF6","TADA2A","TCF12","USP36","WFDC1","ZC3H4"))
+p <- ggplot(data, aes(Gene,Percentages_of_the_group_with_LOF_variants),y=Percentages_of_the_group_with_LOF_variants, fill=Group) + geom_bar(position = "dodge", stat="identity",fill="darkgrey")
+hp <- p + theme(axis.text.x=element_text(angle = 90, vjust = 1, hjust=),axis.title=element_text(size=150)) + theme(plot.margin = unit(c(10,10,10,10), "cm")) + theme(panel.background = element_blank()) + scale_y_continuous(expand=c(0,0), limits =c(0,100), breaks = scales::pretty_breaks(n=10)) + theme(axis.text = element_text(color="black", size =150)) + scale_y_continuous(breaks = seq(0, 100, by = 10))
+
+pdf("MSI_96drivers_MSI_noBCL9L.pdf", width = 200, height = 80)
+hp + scale_y_reverse(expand=c(0,0), limits =c(100,0), breaks = scales::pretty_breaks(n=10))
+dev.off()
