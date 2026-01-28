@@ -40,19 +40,20 @@ MODERATE
 
 #Column equal or less than 0.01
 awk 'NR ==1 { print } NR != 1 && $45 <= 0.01 {print}' file.txt > 0.01file.txt
+#$45 would be the column containing numbers such as MAF in 1000 genomes project, GnomAD exomes or genomes columns.
 
 #Column only dots
 awk 'NR==1 { print } NR != 1 && $10=="." {print}' file.txt > output.txt
+#$10 would be the column containing numbers such as MAF in 1000 genomes project, GnomAD exomes or genomes columns.
 
 #Column contains the word deleterious
 awk 'NR==1 { print } NR != 1 && $45 ~ /deleterious/ {print}' inputfile.txt > outputfile.txt
+#$45 would be the column containing specific words such as deleterious for SIFT results.
 
 #Keep only row with exact phrase in a column
+#This would be used for only returning missense variants in order to further filter CADD scores.
 awk 'NR==1 { print } NR != 1 && $10=="missense_variant" {print} file.txt > output.txt 
 
-#Extract symbols that are dots:
-awk 'NR ==1 { print } NR != 1 && $45 <= 0.01 {print}' file.txt > dots_file.txt
-
-#Grep from file in specific column:
+#Grep from file in specific column (this does the same as LC_ALL-C grep -wf but it can be quicker as it narrows down the search to a specific columnn of entries).
 awk 'FNR==NR{a[$1]++;next}a[$2]' small.txt original.txt > output.txt
 #$2= the column number to grep from in the original file
