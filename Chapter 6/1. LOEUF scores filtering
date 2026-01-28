@@ -1,0 +1,12 @@
+#1. Download gene constraint data .tsv from https://gnomad.broadinstitute.org/data for v4.1
+
+#2. Collect the 1303 gene names and save this list into a text file called genes_to_extract.txt
+
+#3. On the login terminal do:
+awk 'FNR==NR{a[$1]++;next}a[$1]' genes_to_extract.txt gnomad.v4.1.constraint_metrics > genes_to_extract_gnomad_loeufv4.1.txt
+
+#4. Then find any genes which do not have a louef score by deduplicating the before and after.
+
+#5. Open the excel and filter for >0.35 in the lof.oe_ci.upper column.
+
+#6. Filter on excel for only those <0.35 in the MANE transcript.
