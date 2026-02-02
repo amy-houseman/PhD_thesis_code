@@ -15,7 +15,7 @@ module purge
 module load singularity
 module load parallel
 
-cd /scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/RawPEreads/
+cd /path/to/pairedend/gzipped/fastq/files/
 
 module load FastQC/0.11.8
 
