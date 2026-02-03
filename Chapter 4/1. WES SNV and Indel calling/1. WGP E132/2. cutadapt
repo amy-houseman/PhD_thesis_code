@@ -14,40 +14,26 @@
 #SBATCH --qos=maxjobs100
 
 module purge
-module load singularity
+module load cutadapt
 module load parallel
 
 # Set bash error trapping to exit on first error.
 set -eu
 
-WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
-CONTAINER_FILE=trim_galore-0.6.6.sif
-MY_CONTAINER_PATH=/scratch/$USER/containers
-CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
+EXOMEIDS=/file/with/the/file/IDs/not/with/the/file/extensions/.txt
+INPUTFASTQFORWARD=/input/gzipped/forward/fastq/file/{}1.fastq.gz
+INPUTFASTQREVERSE=/input/gzipped/reverse/fastq/file/{}2.fastq.gz
 
-EXOMEIDS=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/RAW_input/IDswithoutR1R2_E132_noinput1
-INPUTFASTQFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/RAW_input/RawPEreads/{}R1_001.fastq.gz
-INPUTFASTQREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/RAW_input/RawPEreads/{}R2_001.fastq.gz
+OUTPUTFASTQFORWARD=/output/gzipped/trimmed/forward/fastq/file/{}1.cutadapt-trimmed.fq.gz
+OUTPUTFASTQREVERSE=/output/gzipped/trimmed/reverse/fastq/file/{}2.cutadapt-trimmed.fq.gz
 
-OUTPUTFASTQFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/cutadapt/TrimmedPEreads/{}1.cutadapt-trimmed.fq.gz
-OUTPUTFASTQREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/cutadapt/TrimmedPEreads/{}2.cutadapt-trimmed.fq.gz
-
-TOOSHORTFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/cutadapt/tooshort/{}1.cutadapt-kitty-tooshort.fq.gz
-TOOSHORTREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/cutadapt/tooshort/{}2.cutadapt-kitty-tooshort.fq.gz
+TOOSHORTFORWARD=/output/gzipped/removed/forward/reads/for/being/too/short/{}1.cutadapt-tooshort.fq.gz
+TOOSHORTREVERSE=/output/gzipped/removed/reverse/reads/for/being/too/short/{}2.cutadapt-tooshort.fq.gz
 
 TXTREPORT=/scratch/c.c21087028/Polyposis_Exome_Analysis_NG0921/cutadapt/TrimmedPEreads/{}cutadapt.txt
 
-if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
-then
-  mkdir -p $MY_CONTAINER_PATH
-  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
-  mkdir $WDPATH
-fi
-
-while [ ! -d $WDPATH ]
-do
-  sleep 10
-done
+TXTREPORT=/output/text/report/for/the/retained/and/removed/reads/{}cutadapt.txt
+#forward adaptor is -a, reverse adaptor is -A.
 
 cd /scratch/c.c21087028/
 
