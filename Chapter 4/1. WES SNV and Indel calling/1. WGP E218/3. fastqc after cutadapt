@@ -14,7 +14,7 @@ module purge
 module load singularity
 module load parallel
 
-cd /scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/TrimmedPEreads
+cd /path/to/pairedend/gzipped/cutadapt/trimmed/fastq/files/
 
 module load FastQC/0.11.8
 
