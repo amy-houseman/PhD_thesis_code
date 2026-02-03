@@ -34,20 +34,8 @@ OUTPUTFASTQREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/T
 TOOSHORTFORWARD=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/tooshort/{}1.cutadapt-kitty-tooshort.fq.gz
 TOOSHORTREVERSE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/tooshort/{}2.cutadapt-kitty-tooshort.fq.gz
 
-TXTREPORT=/scratch/c.c21087028/Polyposis_Exome_Analysis_E218/cutadapt/TrimmedPEreads/{}cutadapt.txt
-
-if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
-then
-  mkdir -p $MY_CONTAINER_PATH
-  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
-  mkdir $WDPATH
-fi
-
-while [ ! -d $WDPATH ]
-do
-  sleep 10
-done
-
+TXTREPORT=/output/text/report/for/the/retained/and/removed/reads/{}cutadapt.txt
+#forward adaptor is -a, reverse adaptor is -A
 cd /scratch/c.c21087028/
 
 sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOMEIDS | parallel -j 1 "singularity exec $CONTAINER cutadapt -q 30 -m 35 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o $OUTPUTFASTQFORWARD -p $OUTPUTFASTQREVERSE $INPUTFASTQFORWARD $INPUTFASTQREVERSE > $TXTREPORT"
