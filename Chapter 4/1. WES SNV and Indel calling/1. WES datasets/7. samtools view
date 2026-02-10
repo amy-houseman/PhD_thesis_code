@@ -15,6 +15,7 @@
 module purge
 module load singularity
 module load parallel
+module load samtools
 
 # Set bash error trapping to exit on first error.
 set -eu
