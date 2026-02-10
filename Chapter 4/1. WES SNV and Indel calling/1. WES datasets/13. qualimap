@@ -25,7 +25,13 @@ EXOME_IDs_FILE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/IDs
 SORTEDBAM=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/samtools/sort/{}PE_samtoolssorted_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
 QUALIMAPBAMQCOUTPUTDIR=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/qualimap/GCA_000001405.15_GRCh38_no_alt_analysis_set_qualimap_{}
 QUALIMAPBAMQCOUTPUTFILE={}
-BEDFILEGFF=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/qualimap/bed/Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38-qualimap.bed
+BEDFILEGFF=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/qualimap/bed/Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38-qualimap.bed #specific for each dataset:
+#WGP E036# nextera-dna-exome-targeted-regions-manifest-v1.2-liftover-hg38.bed
+#WGP E132# truseq-dna-exome-v1-2-hg38.bed
+#WGP E218# truseq-dna-exome-v1-2-hg38.bed
+#BGI# Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38.bed
+#Novogene# Agilent-SureSelect-XT-Reagent-Kit-Human-AllExon-V6-hg38.bed
+
 MAKEDIRECTORYIDS=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/qualimap/output/qualimap_{}
 
 cd /scratch/c.c21087028/
