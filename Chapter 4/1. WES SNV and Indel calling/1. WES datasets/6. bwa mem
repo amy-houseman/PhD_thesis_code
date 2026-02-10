@@ -15,30 +15,16 @@
 
 module purge
 module load parallel
-module load bwa
+module load samtools
 
 # Set bash error trapping to exit on first error.
 set -eu
 
-EXOME_IDs_FILE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/IDswithoutR1R2_JOB27
-HG38_REFERENCE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/bwa/index/GCA_000001405.15_GRCh38_no_alt_analysis_set_refandindex/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
-TRIMMED_FORWARD_OUTPUT=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/TrimmedPEreads/{}1.cutadapt-trimmed.fq.gz
-TRIMMED_REVERSE_OUTPUT=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/cutadapt/TrimmedPEreads/{}2.cutadapt-trimmed.fq.gz
-BWAMEM_SAM=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/bwa/mem/bwamemsam/{}PE_bwamem_GCA_000001405.15_GRCh38_no_alt_analysis_set.sam
-
-if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
-then
-  mkdir -p $MY_CONTAINER_PATH
-  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
-  mkdir $WDPATH
-fi
-
-while [ ! -d $WDPATH ]
-do
-  sleep 10
-done
-
-cd /scratch/c.c21087028/
+EXOME_IDs_FILE=/file/with/the/file/IDs/not/with/the/file/extensions/.txt
+HG38_REFERENCE=/path/to/reference/genome/file/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
+TRIMMED_FORWARD_OUTPUT=/path/to/the/trimmed/fastq/forward/file/{}1.cutadapt-trimmed.fq.gz
+TRIMMED_REVERSE_OUTPUT=/path/to/the/trimmed/fastq/reverse/file/{}2.cutadapt-trimmed.fq.gz
+BWAMEM_SAM=/path/to/the/outputted/sam/file/{}PE_bwamem_GCA_000001405.15_GRCh38_no_alt_analysis_set.sam
 
 #bwa mem for the alignment of the PE reads to the reference genome.
-sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "singularity run $CONTAINER mem $HG38_REFERENCE $TRIMMED_FORWARD_OUTPUT $TRIMMED_REVERSE_OUTPUT > $BWAMEM_SAM"
+sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "bwa mem $HG38_REFERENCE $TRIMMED_FORWARD_OUTPUT $TRIMMED_REVERSE_OUTPUT > $BWAMEM_SAM"
