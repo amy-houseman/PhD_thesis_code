@@ -19,9 +19,9 @@ module load picard
 # Set bash error trapping to exit on first error.
 set -eu
 
-EXOME_IDs_FILE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/IDswithoutR1R2_JOB27
-BWAMEM_SORTEDBAM=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/samtools/sort/{}PE_samtoolssorted_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
-PICARDMARKDUPLICATES_SORTEDBAM=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/picard/markduplicate/markedduplicates/{}PE_markedduplicates_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
-PICARDMARKDUPLICATE_METRICS=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/picard/markduplicate/markedduplicates/metrics/{}PE_markedduplicatesmetrics_GCA_000001405.15_GRCh38_no_alt_analysis_set.txt
+EXOME_IDs_FILE=/file/with/the/file/IDs/not/with/the/file/extensions/.txt
+BWAMEM_SORTEDBAM=/path/to/sorted/bam/file/{}PE_samtoolssorted_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
+PICARDMARKDUPLICATES_SORTEDBAM=/path/to/markduplicated/output/sorted/bam/file/{}PE_markedduplicates_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
+PICARDMARKDUPLICATE_METRICS=/path/to/markduplicated/output/metrics/{}PE_markedduplicatesmetrics_GCA_000001405.15_GRCh38_no_alt_analysis_set.txt
 
 sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "java -jar picard.jar MarkDuplicates I=$BWAMEM_SORTEDBAM O=$PICARDMARKDUPLICATES_SORTEDBAM M=$PICARDMARKDUPLICATE_METRICS"
