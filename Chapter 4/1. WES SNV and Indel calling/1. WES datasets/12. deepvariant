@@ -17,13 +17,20 @@ module purge
 module load parallel
 module load singularity
 
-EXOME_IDs_FILE=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/RAW_input/IDswithoutR1R2_JOB27
-HG38_REFERENCE=/scratch/c.c21087028/Polyposis_Exome_Analysis_E132/bwa/index/GCA_000001405.15_GRCh38_no_alt_analysis_set_refandindex/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
-PICARDMARKDUPLICATES_SORTEDBAM=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/picard/markduplicate/markedduplicates/{}PE_markedduplicates_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
-BED_REGIONS=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/deepvariant/bed/Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38.bed
-OUTPUT_VCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/deepvariant/vcf/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set.vcf.gz
-OUTPUT_GVCF=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/deepvariant/gvcf/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set.g.vcf.gz
-INTERMEDIATE_RESULTS=/scratch/c.c21087028/Polyposis_Exome_Analysis_JOB27/deepvariant/intermediateresults/{}PE_output_intermediate
+EXOME_IDs_FILE=/file/with/the/file/IDs/not/with/the/file/extensions/.txt
+HG38_REFERENCE=/path/to/indexed/human/reference/genome/GCA_000001405.15_GRCh38_no_alt_analysis_set_refandindex/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
+PICARDMARKDUPLICATES_SORTEDBAM=/path/to/markduplicated/sorted/bamfile/{}PE_markedduplicates_GCA_000001405.15_GRCh38_no_alt_analysis_set.bam
+
+BED_REGIONS=/path/to/exome/bed/files/Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38.bed #specific for each dataset:
+#WGP E036# nextera-dna-exome-targeted-regions-manifest-v1.2-liftover-hg38.bed
+#WGP E132# truseq-dna-exome-v1-2-hg38.bed
+#WGP E218# truseq-dna-exome-v1-2-hg38.bed
+#BGI# Agilent-SureSelect-DNA-SureSelectXT-Human-All-Exon-V5-hg38.bed
+#Novogene# Agilent-SureSelect-XT-Reagent-Kit-Human-AllExon-V6-hg38.bed
+
+OUTPUT_VCF=/path/to/outputted/vcf/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set.vcf.gz
+OUTPUT_GVCF=/path/to/outputted/gvcf/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set.g.vcf.gz
+INTERMEDIATE_RESULTS=/path/to/outputted/intermediatefiles/{}PE_output_intermediate
 
 # Set bash error trapping to exit on first error.
 set -eu
