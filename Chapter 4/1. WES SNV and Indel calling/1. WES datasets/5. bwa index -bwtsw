@@ -18,8 +18,7 @@ module load bwa
 # Make bash exit on first error.
 set -eu
 
-
 cd /scratch/c.c21087028/
 
 #Run BWA using the index function and the HumanRefSeq file
-bwa index -a bwtsw /path/to/the/human/reference/genome/file/GCA_000001405.15_GRCh38_no_alt_analysis_set_refandindex/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
+sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "bwa index -a bwtsw /path/to/the/human/reference/genome/file/GCA_000001405.15_GRCh38_no_alt_analysis_set_refandindex/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"
