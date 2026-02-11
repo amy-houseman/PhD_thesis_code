@@ -27,5 +27,5 @@ SAMPLENAMEHEADER=/path/to/temporary/file/with/ensemblvep/headers/and/IDs/{}_allv
 BCFTOOLSANDHEADER=/path/to/output/with/bcftools/split/output/and/the/header/added/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set_allvariants_annotatedVEP_bcftoolssplitvcf_withfullheader.vcf
 
 cd /scratch/c.c21087028/
-sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "$TOOL +split-vep $BCFTOOLSINPUTVCF -f '\t%CHROM\t%ID\t%POS\t%REF\t%ALT\t%QUAL\t%FILTER\t%CSQ[\t%GT][\t%GQ][\t%DP][\t%MIN_DP][\t%AD][\t%VAF][\t%PL][\t%MED_DP]\n' -d  -A tab  > $BCFTOOLSOUTPUTVCF | cp $HEADERFILE $SAMPLENAMEHEADER && cat $BCFTOOLSOUTPUTVCF >> $SAMPLENAMEHEADER && mv $SAMPLENAMEHEADER $BCFTOOLSANDHEADER"
+sed -n "${SLURM_ARRAY_TASK_ID}p" $EXOME_IDs_FILE | parallel -j 1 "$TOOL +split-vep $BCFTOOLSINPUTVCF -f '\t%CHROM\t%ID\t%POS\t%REF\t%ALT\t%QUAL\t%FILTER\t%CSQ[\t%GT][\t%GQ][\t%DP][\t%MIN_DP][\t%AD][\t%VAF][\t%PL][\t%MED_DP]\n' -d  -A tab  > $BCFTOOLSOUTPUTVCF"
 
