@@ -15,10 +15,10 @@ mkdir -p ./logs
 module purge
 module load tools/parallel/20190222-GCCcore-7.3.0
 
-IDs_file='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/IDs'
-DUPLICATED_FILE_PATH='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/2_duplicate_pos_column/'
-DUPLICATED_POSITION_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn.txt'
-ID_ADDED_FILEPATH='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/3_add_IDs_to_pos/'
+IDs_file='/file/with/the/file/IDs/not/with/the/file/extensions/.txt'
+DUPLICATED_FILE_PATH='/path/to/output/with/duplicated/position/column/'
+DUPLICATED_POSITION_ENDING='genome_annotated_bcftoolsplit_duplicatedposition.txt'
+ID_ADDED_FILEPATH='/path/to/output/with/ID/added/to/position/column/'
 ID_ADDED_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn_plateID_added.txt'
 
 FILE_ID=$(sed -n "${LSB_JOBINDEX}p" "$IDs_file")
