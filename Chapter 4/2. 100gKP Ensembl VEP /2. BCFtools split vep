@@ -17,11 +17,11 @@ module load bio/BCFtools/1.16
 module load tools/parallel/20190222-GCCcore-7.3.0
 
 TOOL=bcftools
-FILEIDS=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1B_output_bcftools_split_vep/1_ensemblvep_IDs
-INPUTVCFVEPPED=/re_scratch/re_gecip/cancer_colorectal/AH/1A_polyposis_cases_ensemblvep/1_vep_original/{}.genome_annotated.txt
-BCFTOOLSOUTPUTVCF=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1B_output_bcftools_split_vep/{}.genome_annotated_bcftoolsplit.txt
-HEADERFILE=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1C_bcftoolssplot_addedheader/bcftoolsheader
-SAMPLENAMEHEADER=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/{}.1C_bcftoolssplot_addedheader
-BCFTOOLSANDHEADER=/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1C_bcftoolssplot_addedheader/bcftools_and_header/{}.genome_annotated_bcftoolsplit_headeraddded.txt
+FILEIDS=/path/to/IDs/file/no/file/extension/1_ensemblvep_IDs.txt
+INPUTVCFVEPPED=/path/to/input/ensembl/vep/annotated/files/{}.genome_annotated.txt
+BCFTOOLSOUTPUTVCF=/path/to/output/files/splitvep/{}.genome_annotated_bcftoolsplit.txt
+HEADERFILE=/path/to/file/with/ensemblvep/headers/ensembl-vep-headers_withqual_filters.txt
+SAMPLENAMEHEADER=/path/to/temporary/file/with/ensemblvep/headers/and/IDs/{}_allvariants_ensembl-vep-headers.txt
+BCFTOOLSANDHEADER=/path/to/output/with/bcftools/split/output/and/the/header/added/{}PE_output_GCA_000001405.15_GRCh38_no_alt_analysis_set_allvariants_annotatedVEP_bcftoolssplitvcf_withfullheader.vcf
 
 sed -n "${LSB_JOBINDEX}p" $FILEIDS | parallel -j 1 "$TOOL +split-vep $INPUTVCFVEPPED -f '\t%CHROM\t%POS\t%ID\t%REF\t%ALT\t%QUAL\t%FILTER\t%CSQ[\t%GT][\t%GQ][\t%GQX][\t%DP][\t%DPF][\t%AD][\t%PL]\n' -d -A tab > $BCFTOOLSOUTPUTVCF | cp $HEADERFILE $SAMPLENAMEHEADER && cat $BCFTOOLSOUTPUTVCF >> $SAMPLENAMEHEADER && mv $SAMPLENAMEHEADER $BCFTOOLSANDHEADER"
