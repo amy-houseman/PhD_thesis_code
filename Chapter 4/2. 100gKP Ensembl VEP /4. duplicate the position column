@@ -14,7 +14,7 @@ IDs_file='/file/with/the/file/IDs/not/with/the/file/extensions/.txt'
 FILE_WITH_FIRST_COL_REMOVED='/path/to/folder/with/first/column/removed/'
 FILE_WITH_FIRST_COL_REMOVED_ENDING='genome_annotated_bcftoolsplit_removefirstcol.txt'
 DUPLICATED_POSITION_COLUMN='/path/to/output/with/duplicated/position/column/'
-DUPLICATED_POSITION_COLUMN_ENDING='{}genome_annotated_bcftoolsplit_removefirstcol.txt'
+DUPLICATED_POSITION_COLUMN_ENDING='{}genome_annotated_bcftoolsplit_duplicatedposition.txt'
 IDs={}
 
 FILE_ID=$(sed -n "${LSB_JOBINDEX}p" $IDs_file)
