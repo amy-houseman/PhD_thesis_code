@@ -10,11 +10,11 @@
 
 module load tools/parallel/20190222-GCCcore-7.3.0
 
-IDs_file='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/IDs'
-FILE_WITH_FIRST_COL_REMOVED='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/1_remove_first_col/'
+IDs_file='/file/with/the/file/IDs/not/with/the/file/extensions/.txt'
+FILE_WITH_FIRST_COL_REMOVED='/path/to/folder/with/first/column/removed/'
 FILE_WITH_FIRST_COL_REMOVED_ENDING='genome_annotated_bcftoolsplit_removefirstcol.txt'
-DUPLICATED_POSITION_COLUMN='/re_scratch/re_gecip/cancer_colorectal/AH/1B_bcftools_split_vep/1D_addingID/1_addingnewcolumn/2_duplicate_pos_column/'
-DUPLICATED_POSITION_COLUMN_ENDING='genome_annotated_bcftoolsplit_removefirstcol_duplicatedposcolumn.txt'
+DUPLICATED_POSITION_COLUMN='/path/to/output/with/duplicated/position/column/'
+DUPLICATED_POSITION_COLUMN_ENDING='{}genome_annotated_bcftoolsplit_removefirstcol.txt'
 IDs={}
 
 FILE_ID=$(sed -n "${LSB_JOBINDEX}p" $IDs_file)
