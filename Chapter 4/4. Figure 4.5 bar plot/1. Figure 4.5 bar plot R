@@ -1,1 +1,16 @@
-Waiting for airlock
+library(ggplot2)
+
+# Create data
+data <- polyphen.sift.missense.aminoacids.50
+
+# Barplot
+ggplot(data, aes(x=Amino_acids, y=Count)) +
+  geom_bar(stat = "identity")
+
+library("ggplot2")
+ggplot(data, aes(x=reorder(Amino_acids,-Count),y=Count, fill=Group)) + geom_bar(position = "dodge", stat="identity",fill="darkblue") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) + ylim(0, 4000) + scale_y_continuous(breaks = seq(0, 10000, by = 500), expand = c(0, 0))+ theme(
+    plot.title = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 8),
+    legend.text = element_text(size = 12)) + labs(x = "Amino acid change")
