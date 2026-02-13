@@ -16,10 +16,4 @@ Scripts using the 100kGP were ran on Genomics England's Double Helix supercomput
 
 ---
 
-##
-To clone this repository:
-
-```bash
-git clone https://github.com/amy-houseman/PhD_thesis_code.git
-cd PhD_thesis_code
 
